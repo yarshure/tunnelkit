@@ -97,7 +97,8 @@ open class OpenVPNTunnelProvider: NEPacketTunnelProvider {
         "2606:4700:4700::1111",
         "2606:4700:4700::1001"
     ]
-    
+    //route local bypass
+    public var exculedRoutes: [NEIPv4Route]?
     // MARK: Constants
     
     private var logFile: FileDestination?
@@ -599,7 +600,11 @@ extension OpenVPNTunnelProvider: OpenVPNSessionDelegate {
             
             ipv4Settings = NEIPv4Settings(addresses: [ipv4.address], subnetMasks: [ipv4.addressMask])
             ipv4Settings?.includedRoutes = routes
-            ipv4Settings?.excludedRoutes = []
+             if exculedRoutes != nil {
+                ipv4Settings?.excludedRoutes = exculedRoutes
+            } else {
+                ipv4Settings?.excludedRoutes = []
+            }
         }
 
         var ipv6Settings: NEIPv6Settings?
